@@ -15,10 +15,10 @@ flowchart LR
   API2 --> SK[FastAPI /skills endpoint]
 
   AWP --> AG[Strands Agent Orchestrator]
-  AG --> MOD[Model Router\nOpenAI | MiniMax | Anthropic]
+  AG --> MOD["Model Router\nOpenAI, MiniMax, Anthropic"]
 
   AG --> TOOLS[Tool Layer]
-  TOOLS --> SH[run_shell_command\nPowerShell/cmd/curl]
+  TOOLS --> SH["run_shell_command\nPowerShell, cmd, curl"]
   TOOLS --> FS[read_file/write_file/list_directory]
   TOOLS --> MEMTOOLS[save/search/reindex memory]
   TOOLS --> SKTOOLS[list/read/create skill]

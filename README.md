@@ -5,36 +5,57 @@
 ## Architecture
 
 ```mermaid
-flowchart LR
-  U[User] --> FE[Next.js Frontend]
-  FE --> CK[CopilotKit UI + Runtime]
-  CK --> API1["/api/copilotkit"]
-  CK --> API2["/api/skills"]
+flowchart TB
+  subgraph Presentation["Presentation Layer"]
+    FE["Next.js UI"]
+    CPK["CopilotKit Chat and CoAgent State"]
+    CAN["Canvas and Skills Panels"]
+    FE --> CPK
+    FE --> CAN
+  end
 
-  API1 --> AWP[FastAPI /awp endpoint]
-  API2 --> SK[FastAPI /skills endpoint]
+  subgraph Integration["Protocol and API Layer"]
+    API_CPK["/api/copilotkit (Next.js)"]
+    API_SK["/api/skills (Next.js)"]
+    AWP["/awp (FastAPI + ag_ui_strands)"]
+    SKEP["/skills (FastAPI)"]
+    API_CPK --> AWP
+    API_SK --> SKEP
+  end
 
-  AWP --> AG[Strands Agent Orchestrator]
-  AG --> MOD["Model Router\nOpenAI, MiniMax, Anthropic"]
+  subgraph AgentCore["Agent Runtime Layer"]
+    ORCH["Strands Agent Orchestrator"]
+    PROMPT["Prompt Builder\nworkspace context + skills summary + memory recall"]
+    MODELS["Model Adapter\nOpenAI / MiniMax / Anthropic"]
+    ORCH --> PROMPT
+    ORCH --> MODELS
+  end
 
-  AG --> TOOLS[Tool Layer]
-  TOOLS --> SH["run_shell_command\nPowerShell, cmd, curl"]
-  TOOLS --> FS[read_file/write_file/list_directory]
-  TOOLS --> MEMTOOLS[save/search/reindex memory]
-  TOOLS --> SKTOOLS[list/read/create skill]
-  TOOLS --> DDTOOLS[query/search Datadog traces]
+  subgraph Tools["Tooling Layer"]
+    SYS["System Tools\nshell, files, time, calculator"]
+    WST["Workspace Tools\nprovision, heartbeat, markdown memory"]
+    SKT["Skill Tools\nlist, read, create"]
+    MEMT["Memory Tools\nsave, search, reindex"]
+    DDT["Datadog Tools\nquery/search traces, extract memories"]
+  end
 
-  AG --> WS["Workspace Runtime\nworkspaces/{thread_id}"]
-  WS --> CORE[AGENTS.md / SOUL.md / TOOLS.md\nIDENTITY.md / USER.md / HEARTBEAT.md]
-  WS --> MM[MEMORY.md + memory/YYYY-MM-DD.md]
-  WS --> LSK[skills/*/SKILL.md]
+  subgraph Data["State and Storage Layer"]
+    WS["Workspace Filesystem\nworkspaces/{thread_id}"]
+    CORE["Core MD Files\nAGENTS, SOUL, TOOLS, IDENTITY, USER, HEARTBEAT"]
+    MDF["Memory MD Files\nMEMORY.md and memory/date.md"]
+    SKDIR["Skill Files\nskills/name/SKILL.md"]
+    NEO["Neo4j Memory Graph\nMemory + MemoryChunk + indexes"]
+    DD["Datadog LLMObs and Logs"]
+    WS --> CORE
+    WS --> MDF
+    WS --> SKDIR
+  end
 
-  AG --> MEM[Neo4j Memory Store]
-  MEM --> M1[(Memory nodes)]
-  MEM --> M2[(MemoryChunk + embeddings)]
-  MEM --> IDX[Fulltext + Vector index]
-
-  AG --> DD[Datadog LLMObs + trace APIs]
+  Presentation --> Integration
+  Integration --> AgentCore
+  AgentCore --> Tools
+  Tools --> Data
+  AgentCore --> Data
 ```
 
 ## End-to-End Flow

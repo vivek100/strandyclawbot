@@ -1,0 +1,14 @@
+strands-agents>=0.1.0
+ag-ui-strands>=0.1.0
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-dotenv>=1.0.0
+openai>=1.40.0
+neo4j>=5.20.0
+ddtrace>=3.5.0
+datadog-api-client>=2.25.0
+httpx>=0.27.0
+
+# Optional: uncomment providers you want to use
+# openai>=1.0.0           # for openai / minimax providers
+# anthropic>=0.30.0       # for anthropic provider

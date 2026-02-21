@@ -1,0 +1,33 @@
+{
+  "name": "clawdbot",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently --names \"UI,AGENT\" --prefix-colors \"cyan,yellow\" \"npm run dev:ui\" \"npm run dev:agent\"",
+    "dev:ui": "next dev -p 3000",
+    "dev:agent": ".\\.venv\\Scripts\\python.exe -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload --app-dir agent",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "install:agent": ".\\.venv\\Scripts\\python.exe -m pip install -r agent/requirements.txt"
+  },
+  "dependencies": {
+    "@ag-ui/client": "^0.0.45",
+    "@copilotkit/react-core": "^1.50.0",
+    "@copilotkit/react-ui": "^1.50.0",
+    "@copilotkit/runtime": "^1.50.0",
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "concurrently": "^9.0.0",
+    "eslint": "^8",
+    "eslint-config-next": "^14.2.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

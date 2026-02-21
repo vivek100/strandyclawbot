@@ -37,6 +37,40 @@ def get_workspace_path(workspace_id: str | None = None) -> Path:
     return _default_workspace_root() / ws_id
 
 
+def _workspace_latest_mtime(path: Path) -> float:
+    if not path.exists():
+        return 0.0
+    latest = path.stat().st_mtime
+    skills_dir = path / "skills"
+    if skills_dir.exists():
+        for skill_file in skills_dir.glob("*/SKILL.md"):
+            try:
+                latest = max(latest, skill_file.stat().st_mtime)
+            except Exception:
+                continue
+    return latest
+
+
+def resolve_workspace_id(workspace_id: str | None = None) -> str:
+    requested = (workspace_id or "").strip()
+    if requested and requested.lower() not in {"auto"}:
+        return _sanitize_workspace_id(requested)
+
+    forced = os.getenv("AGENT_SKILLS_WORKSPACE_ID", "").strip()
+    if forced:
+        return _sanitize_workspace_id(forced)
+
+    root = _default_workspace_root()
+    if not root.exists():
+        return "default"
+
+    candidates = [p for p in root.iterdir() if p.is_dir()]
+    if not candidates:
+        return "default"
+    newest = max(candidates, key=_workspace_latest_mtime)
+    return _sanitize_workspace_id(newest.name)
+
+
 def _default_file_content(filename: str) -> str:
     if filename == "AGENTS.md":
         return "# Agent Workspace\n\nThis file defines local operating instructions for the agent.\n"

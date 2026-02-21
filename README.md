@@ -8,8 +8,8 @@
 flowchart LR
   U[User] --> FE[Next.js Frontend]
   FE --> CK[CopilotKit UI + Runtime]
-  CK --> API1[/api/copilotkit]
-  CK --> API2[/api/skills]
+  CK --> API1["/api/copilotkit"]
+  CK --> API2["/api/skills"]
 
   API1 --> AWP[FastAPI /awp endpoint]
   API2 --> SK[FastAPI /skills endpoint]
@@ -24,7 +24,7 @@ flowchart LR
   TOOLS --> SKTOOLS[list/read/create skill]
   TOOLS --> DDTOOLS[query/search Datadog traces]
 
-  AG --> WS[Workspace Runtime\nworkspaces/<thread_id>]
+  AG --> WS["Workspace Runtime\nworkspaces/{thread_id}"]
   WS --> CORE[AGENTS.md / SOUL.md / TOOLS.md\nIDENTITY.md / USER.md / HEARTBEAT.md]
   WS --> MM[MEMORY.md + memory/YYYY-MM-DD.md]
   WS --> LSK[skills/*/SKILL.md]
@@ -149,4 +149,3 @@ MINIMAX_API_KEY=...
 MINIMAX_BASE_URL=https://api.minimax.io/v1
 MINIMAX_MODEL=MiniMax-M2.5
 ```
-

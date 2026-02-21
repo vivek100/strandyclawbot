@@ -54,6 +54,7 @@ from workspace import (  # noqa: E402
     build_workspace_context,
     describe_skill_sources,
     provision_workspace,
+    resolve_workspace_id,
     skill_registry_summary,
     update_heartbeat,
 )
@@ -485,9 +486,10 @@ async def health():
 
 
 @app.get("/skills")
-async def skills(thread_id: str = Query(default="default")):
-    provision_workspace(thread_id)
-    return describe_skill_sources(thread_id)
+async def skills(thread_id: str = Query(default="auto")):
+    resolved = resolve_workspace_id(thread_id)
+    provision_workspace(resolved)
+    return describe_skill_sources(resolved)
 
 
 if __name__ == "__main__":

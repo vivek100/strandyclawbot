@@ -166,7 +166,7 @@ export function CanvasPanel({
     setSkillsLoading(true);
     setSkillsError(null);
     try {
-      const res = await fetch("/api/skills?thread_id=default", { method: "GET", cache: "no-store" });
+      const res = await fetch("/api/skills?thread_id=auto", { method: "GET", cache: "no-store" });
       if (!res.ok) {
         throw new Error(`HTTP ${res.status}`);
       }

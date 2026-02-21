@@ -14,7 +14,7 @@ function resolveAgentBaseUrl(): string {
 }
 
 export const GET = async (req: NextRequest) => {
-  const threadId = req.nextUrl.searchParams.get("thread_id") || "default";
+  const threadId = req.nextUrl.searchParams.get("thread_id") || "auto";
   const baseUrl = resolveAgentBaseUrl();
   const upstream = `${baseUrl}/skills?thread_id=${encodeURIComponent(threadId)}`;
 
